@@ -1,13 +1,4 @@
 "use client";
-import { Avatar } from "@/components/ui/avatar";
-import {
-  Dropdown,
-  DropdownButton,
-  DropdownDivider,
-  DropdownItem,
-  DropdownLabel,
-  DropdownMenu,
-} from "@/components/ui/dropdown";
 import {
   Navbar,
   NavbarItem,
@@ -17,42 +8,14 @@ import {
 import {
   Sidebar,
   SidebarBody,
-  SidebarFooter,
   SidebarHeader,
-  SidebarHeading,
   SidebarItem,
   SidebarLabel,
   SidebarSection,
-  SidebarSpacer,
 } from "@/components/ui/sidebar";
 import { SidebarLayout } from "@/components/ui/sidebar-layout";
-import {
-  Checkbox,
-  CheckboxField,
-  CheckboxGroup,
-} from "@/components/ui/checkbox";
-import { Field, Label } from "@/components/ui/fieldset";
-import {
-  ArrowRightStartOnRectangleIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  Cog8ToothIcon,
-  LightBulbIcon,
-  PlusIcon,
-  ShieldCheckIcon,
-  UserIcon,
-} from "@heroicons/react/16/solid";
-import {
-  Cog6ToothIcon,
-  HomeIcon,
-  InboxIcon,
-  MagnifyingGlassIcon,
-  MegaphoneIcon,
-  QuestionMarkCircleIcon,
-  SparklesIcon,
-  Square2StackIcon,
-  TicketIcon,
-} from "@heroicons/react/20/solid";
+
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
 import { ImRocket } from "react-icons/im";
 import { Input, InputGroup } from "./ui/input";
@@ -61,14 +24,8 @@ import { useState } from "react";
 import Category from "./sidebar/Category";
 import Price from "./sidebar/Price";
 import Color from "./sidebar/Color";
-import { Divider } from "./ui/divider";
-import {
-  Dialog,
-  DialogActions,
-  DialogBody,
-  DialogDescription,
-  DialogTitle,
-} from "./ui/dialog";
+
+import { Dialog, DialogActions, DialogBody, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 export default function Test({ children }) {
   let [isOpen, setIsOpen] = useState(false);
