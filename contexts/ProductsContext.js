@@ -1,23 +1,18 @@
-// context/ProductsContext.js
 "use client";
 
 import React, { createContext, useContext, useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchProducts } from "@/lib/actions";
+import { createProduct, fetchProducts } from "@/lib/actions";
 
-// Create the context
 const ProductsContext = createContext();
 
-// Custom hook to use the context
 export const useProducts = () => {
   return useContext(ProductsContext);
 };
 
-// Create ProductContextProvider
 export const ProductsProvider = ({ children }) => {
   const queryClient = useQueryClient();
 
-  // Fetching products using React Query
   const {
     data: products,
     error,
@@ -28,44 +23,43 @@ export const ProductsProvider = ({ children }) => {
     queryFn: fetchProducts,
   });
 
-  // Create product mutation
   const createProductMutation = useMutation({
-    mutationFn: async (newProduct) => {
-      const res = await fetch(
-        "https://<your-azure-app>.azurewebsites.net/api/products",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newProduct),
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error("Failed to create product");
-      }
-
-      return res.json();
-    },
+    mutationFn: createProduct,
     onSuccess: () => {
       queryClient.invalidateQueries(["products"]);
     },
   });
 
-  // State for filtering
   // State for selected filters
+  const [selectedCompanies, setSelectedCompanies] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedPriceRange, setSelectedPriceRange] = useState([0, 1000000]); // [min, max]
   const [query, setQuery] = useState("");
 
-  // Handlers for filter input
   const handleInputChange = (event) => {
+    console.log("event.target.value", event.target.value);
     setQuery(event.target.value);
   };
 
-  // Handle category change
+  const handleCompanyChange = (company) => {
+    console.log("inside handle company change", company);
+    if (company === "all") {
+      setSelectedCompanies([]);
+      return;
+    }
+
+    setSelectedCompanies((prevSelected) => {
+      if (company) {
+        if (!prevSelected.includes(company)) {
+          return [...prevSelected, company.toLowerCase()];
+        }
+        return prevSelected.filter((tempCompany) => tempCompany !== company);
+      }
+      return prevSelected;
+    });
+  };
+
   const handleCategoryChange = (category) => {
     setSelectedCategories((prevSelected) => {
       if (category) {
@@ -78,7 +72,6 @@ export const ProductsProvider = ({ children }) => {
     });
   };
 
-  // Handle color change
   const handleColorChange = (color) => {
     console.log("entered color change:", color);
     setSelectedColors((prevSelected) => {
@@ -92,7 +85,6 @@ export const ProductsProvider = ({ children }) => {
     });
   };
 
-  // Handle price range change
   const handlePriceRangeChange = (value) => {
     console.log("value", value);
     switch (value) {
@@ -125,14 +117,19 @@ export const ProductsProvider = ({ children }) => {
       );
     }
 
-    // Filter by selected categories
+    if (selectedCompanies.length > 0) {
+      console.log("entered filtering by companies", selectedCompanies);
+      filteredProducts = filteredProducts.filter((product) =>
+        selectedCompanies.includes(product.company.toLowerCase())
+      );
+    }
+
     if (selectedCategories.length > 0) {
       filteredProducts = filteredProducts.filter((product) =>
         selectedCategories.includes(product.category.toLowerCase())
       );
     }
 
-    // Filter by selected colors
     if (selectedColors.length > 0) {
       console.log("filtering selectedColors", selectedColors);
       filteredProducts = filteredProducts.filter((product) =>
@@ -140,7 +137,6 @@ export const ProductsProvider = ({ children }) => {
       );
     }
 
-    // Filter by price range
     if (selectedPriceRange[0] !== 0 || selectedPriceRange[1] !== 1000000) {
       filteredProducts = filteredProducts.filter(
         (product) =>
@@ -149,7 +145,14 @@ export const ProductsProvider = ({ children }) => {
       );
     }
     return filteredProducts;
-  }, [products, selectedCategories, selectedColors, selectedPriceRange, query]);
+  }, [
+    products,
+    selectedCategories,
+    selectedColors,
+    selectedPriceRange,
+    selectedCompanies,
+    query,
+  ]);
 
   return (
     <ProductsContext.Provider
@@ -162,17 +165,12 @@ export const ProductsProvider = ({ children }) => {
         filteredData,
         query,
         handleInputChange,
-        createProduct: createProductMutation.mutate,
-        isCreating: createProductMutation.isLoading,
-        selectedCategories,
-        setSelectedCategories,
-        selectedColors,
-        setSelectedColors,
-        selectedPriceRange,
-        setSelectedPriceRange,
         handleCategoryChange,
         handleColorChange,
         handlePriceRangeChange,
+        handleCompanyChange,
+        createProduct: createProductMutation.mutate,
+        isCreating: createProductMutation.isLoading,
       }}
     >
       {children}

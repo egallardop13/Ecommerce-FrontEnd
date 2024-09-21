@@ -1,8 +1,12 @@
+"use client";
 import React from "react";
 import { Button } from "./ui/button";
 import { Heading } from "./ui/heading";
+import { useProducts } from "@/contexts/ProductsContext";
 
 const Recommended = () => {
+  const { handleCompanyChange } = useProducts();
+
   return (
     <div className="flex flex-col w-full gap-y-2 items-center sm:items-start">
       <Heading className="">Recommended</Heading>
@@ -12,6 +16,7 @@ const Recommended = () => {
           value=""
           title="All Products"
           outline
+          onClick={() => handleCompanyChange("all")}
         >
           All Products
         </Button>
@@ -21,6 +26,7 @@ const Recommended = () => {
           title="Nike"
           outline
           className="w-full max-w-32 sm:max-w-28"
+          onClick={() => handleCompanyChange("nike")}
         >
           Nike
         </Button>
@@ -29,6 +35,7 @@ const Recommended = () => {
           title="Adidas"
           outline
           className="w-full max-w-32 sm:max-w-28"
+          onClick={() => handleCompanyChange("adidas")}
         >
           Adidas{" "}
         </Button>
@@ -37,6 +44,7 @@ const Recommended = () => {
           title="Puma"
           outline
           className="w-full max-w-32 sm:max-w-28"
+          onClick={() => handleCompanyChange("puma")}
         >
           Puma
         </Button>
@@ -45,6 +53,7 @@ const Recommended = () => {
           title="Vans"
           outline
           className="w-full max-w-32 sm:max-w-28"
+          onClick={() => handleCompanyChange("vans")}
         >
           Vans
         </Button>
