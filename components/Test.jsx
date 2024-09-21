@@ -58,7 +58,9 @@ import { ImRocket } from "react-icons/im";
 import { Input, InputGroup } from "./ui/input";
 
 import { useState } from "react";
-
+import Category from "./sidebar/Category";
+import Price from "./sidebar/Price";
+import Color from "./sidebar/Color";
 import { Divider } from "./ui/divider";
 import {
   Dialog,
@@ -68,7 +70,6 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
-import Category from "./sidebar/Category";
 export default function Test({ children }) {
   let [isOpen, setIsOpen] = useState(false);
   return (
@@ -141,9 +142,13 @@ export default function Test({ children }) {
           <SidebarBody>
             <SidebarSection>
               <Category />
-              <SidebarSection></SidebarSection>
+              <SidebarSection>
+                <Price />
+              </SidebarSection>
             </SidebarSection>
-            <SidebarSection></SidebarSection>
+            <SidebarSection>
+              <Color />
+            </SidebarSection>
           </SidebarBody>
         </Sidebar>
       }
