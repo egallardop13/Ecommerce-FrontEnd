@@ -1,46 +1,42 @@
-import { useState } from "react";
 import { SidebarHeading, SidebarItem } from "../ui/sidebar";
-import { Checkbox, CheckboxField, CheckboxGroup } from "../ui/checkbox";
 import { Label } from "../ui/fieldset";
+import { Radio, RadioField, RadioGroup } from "../ui/radio";
+import { useProducts } from "@/contexts/ProductsContext";
 
 const Price = () => {
-  let [selected, setSelected] = useState([""]);
+  const { handlePriceRangeChange } = useProducts();
 
   const options = ["$0-$50", "$50-$100", "$100-$150", "Over $150"];
 
   return (
     <>
       <SidebarHeading>Price</SidebarHeading>
-      <CheckboxGroup role="group" aria-label="Prices">
+      <RadioGroup role="group" aria-label="Prices">
         <SidebarItem>
-          <CheckboxField>
-            <Checkbox
-              checked={selected.length > 0}
-              indeterminate={selected.length !== options.length}
-              onChange={(checked) => setSelected(checked ? options : [])}
+          <RadioField>
+            <Radio
+              value="all"
+              onClick={() => {
+                handlePriceRangeChange(4);
+              }}
             />
-            <Label>Select all</Label>
-          </CheckboxField>
+            <Label>All</Label>
+          </RadioField>
         </SidebarItem>
-        {options.map((option) => (
+        {options.map((option, index) => (
           <SidebarItem key={option}>
-            <CheckboxField>
-              <Checkbox
-                name={option}
-                checked={selected.includes(option)}
-                onChange={(checked) => {
-                  return setSelected((pending) => {
-                    return checked
-                      ? [...pending, option]
-                      : pending.filter((item) => item !== option);
-                  });
+            <RadioField>
+              <Radio
+                value={option}
+                onClick={() => {
+                  handlePriceRangeChange(index);
                 }}
               />
               <Label>{option}</Label>
-            </CheckboxField>
+            </RadioField>
           </SidebarItem>
         ))}
-      </CheckboxGroup>
+      </RadioGroup>
     </>
   );
 };
